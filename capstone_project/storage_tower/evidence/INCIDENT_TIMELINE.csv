@@ -1,0 +1,8 @@
+timestamp_utc,phase,action,observation,evidence_source,owner
+2026-06-19T06:36:15.7956716Z,Baseline,Confirm storage network defaultAction=Allow,Healthy baseline (defaultAction=Allow),az storage account show,Ops
+2026-06-19T06:36:15.7956716Z,Arm,Test restore path before break,Restore-first check passed (state remained Allow),az storage account show and az storage account update (no-op),Ops
+2026-06-19T06:36:30.0285930Z,Baseline,Run pre-fault storage access check,Container list succeeded (app-data visible),az storage container list,Ops
+2026-06-19T06:37:02.2520783Z,Fault,Inject defaultAction=Deny,Fault applied (defaultAction=Deny),az storage account update and az storage account show,Ops
+2026-06-19T06:37:45.1886817Z,Detection,Run storage access check during fault,Access failed with network-rule block and exit code 1,az storage container list,Ops
+2026-06-19T06:38:00.8157575Z,Restore,Set defaultAction back to Allow,State restored (defaultAction=Allow),az storage account update and az storage account show,Ops
+2026-06-19T06:38:10.1939041Z,Verification,Re-run storage access check,Service recovered (container list success, exit code 0),az storage container list,Ops

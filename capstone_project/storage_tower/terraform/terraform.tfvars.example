@@ -1,0 +1,15 @@
+resource_group_name = "rg-finbridge-capstone-storage"
+location            = "eastus"
+prefix              = "finbridgecap"
+vm_size             = "Standard_B2s"
+admin_username      = "azureuser"
+
+admin_ssh_public_key = "ssh-rsa AAAAB3..."
+my_public_ip_cidr    = "203.0.113.10/32"
+
+tags = {
+  environment = "capstone"
+  owner       = "finbridge-ops"
+  workload    = "payments"
+  tower       = "storage"
+}
