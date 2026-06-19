@@ -1,0 +1,6 @@
+# Terraform local cache and providers
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+plan-output.txt

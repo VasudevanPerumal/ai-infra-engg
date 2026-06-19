@@ -1,0 +1,26 @@
+#cloud-config
+package_update: true
+packages:
+  - postgresql
+  - postgresql-client
+users:
+  - default
+chpasswd:
+  expire: false
+  users:
+    - name: labadmin
+      password: ${admin_password}
+ssh_pwauth: true
+runcmd:
+  - useradd -m -s /bin/bash labadmin || true
+  - echo 'labadmin:${admin_password}' | chpasswd
+  - sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+  - systemctl restart ssh || systemctl restart sshd
+  - systemctl enable postgresql
+  - systemctl start postgresql
+  - sudo -u postgres psql -c "CREATE USER labuser WITH PASSWORD 'Lab@2024!';" || true
+  - sudo -u postgres psql -c "CREATE DATABASE labdb OWNER labuser;" || true
+  - sudo -u postgres psql -c "ALTER SYSTEM SET listen_addresses = '10.0.2.10';"
+  - sudo -u postgres psql -c "ALTER SYSTEM SET max_connections = '20';"
+  - echo 'host labdb labuser 10.0.1.0/24 md5' >> /var/lib/pgsql/data/pg_hba.conf || echo 'host labdb labuser 10.0.1.0/24 md5' >> /etc/postgresql/14/main/pg_hba.conf
+  - systemctl restart postgresql

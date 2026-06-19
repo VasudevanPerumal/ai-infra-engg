@@ -1,0 +1,15 @@
+#cloud-config
+package_update: true
+users:
+  - default
+chpasswd:
+  expire: false
+  users:
+    - name: labadmin
+      password: ${admin_password}
+ssh_pwauth: true
+runcmd:
+  - useradd -m -s /bin/bash labadmin || true
+  - echo 'labadmin:${admin_password}' | chpasswd
+  - sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+  - systemctl restart ssh || systemctl restart sshd
